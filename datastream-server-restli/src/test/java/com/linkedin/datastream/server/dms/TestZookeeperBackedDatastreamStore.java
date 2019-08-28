@@ -59,12 +59,11 @@ public class TestZookeeperBackedDatastreamStore {
     datastreamSource.setConnectionString(source);
     DatastreamDestination datastreamDestination = new DatastreamDestination();
     datastreamDestination.setConnectionString(dest);
-    Datastream ds = new Datastream().setName(name)
+    return new Datastream().setName(name)
         .setConnectorName(connectorType)
         .setSource(datastreamSource)
         .setDestination(datastreamDestination)
         .setMetadata(metadata);
-    return ds;
   }
 
   /**
@@ -82,7 +81,7 @@ public class TestZookeeperBackedDatastreamStore {
     // get the same Datastream back
     Datastream ds2 = _store.getDatastream(ds.getName());
     Assert.assertNotNull(ds2);
-    Assert.assertTrue(ds.equals(ds2));
+    Assert.assertEquals(ds2, ds);
 
     // recreating the same Datastream should fail
     try {
@@ -110,7 +109,7 @@ public class TestZookeeperBackedDatastreamStore {
     // get the same Datastream back
     Datastream ds2 = _store.getDatastream(ds.getName());
     Assert.assertNotNull(ds2);
-    Assert.assertTrue(ds.equals(ds2));
+    Assert.assertEquals(ds2, ds);
 
     // update the datastream
     ds.getMetadata().put("key", "value");

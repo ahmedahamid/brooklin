@@ -102,10 +102,10 @@ public class ZkAdapter {
 
   private final String _defaultTransportProviderName;
 
-  private String _zkServers;
-  private String _cluster;
-  private int _sessionTimeout;
-  private int _connectionTimeout;
+  private final String _zkServers;
+  private final String _cluster;
+  private final int _sessionTimeout;
+  private final int _connectionTimeout;
   private ZkClient _zkclient;
 
   private String _instanceName;
@@ -113,14 +113,14 @@ public class ZkAdapter {
   private String _hostname;
 
   private volatile boolean _isLeader = false;
-  private ZkAdapterListener _listener;
+  private final ZkAdapterListener _listener;
 
   // the current znode this node is listening to
   private String _currentSubscription = null;
 
-  private Random randomGenerator = new Random();
+  private final Random randomGenerator = new Random();
 
-  private ZkLeaderElectionListener _leaderElectionListener = new ZkLeaderElectionListener();
+  private final ZkLeaderElectionListener _leaderElectionListener = new ZkLeaderElectionListener();
   private ZkBackedTaskListProvider _assignmentList = null;
 
   // only the leader should maintain this list and listen to the changes of live instances
@@ -640,7 +640,7 @@ public class ZkAdapter {
     for (String instance : nodesToRemove.keySet()) {
       Set<String> removed = nodesToRemove.get(instance);
       if (removed.size() > 0) {
-        LOG.info("Instance: {}, removing assignments: ", instance, removed);
+        LOG.info("Instance: {}, removing assignments: {}", instance, removed);
         for (String name : removed) {
           removeTaskNodes(instance, name);
         }
@@ -811,9 +811,7 @@ public class ZkAdapter {
           LOG.warn("Failed to remove zk path: {} Very likely that the zk node doesn't exist anymore", path);
         }
 
-        if (_liveTaskMap.containsKey(instance)) {
-          _liveTaskMap.remove(instance);
-        }
+        _liveTaskMap.remove(instance);
       }
     }
   }
@@ -988,7 +986,7 @@ public class ZkAdapter {
    * ZooKeeper znodes under <i>/{cluster}/dms/</i>.
    */
   public class ZkBackedDMSDatastreamList implements IZkChildListener, IZkDataListener {
-    private String _path;
+    private final String _path;
 
     /**
      * Sets up a watch on the {@code /{cluster}/dms} tree, so it can be notified of future changes.
@@ -1055,7 +1053,7 @@ public class ZkAdapter {
    */
   public class ZkBackedLiveInstanceListProvider implements IZkChildListener {
     private List<String> _liveInstances = new ArrayList<>();
-    private String _path;
+    private final String _path;
 
     /**
      * Sets up a watch on the {@code /{cluster}/liveinstances} tree, so it can be notified
